@@ -17,6 +17,8 @@ use Illuminate\Support\Facades\Redirect;
 use Illuminate\Support\Facades\Validator;
 use App\Http\Requests\ProductStoreRequest;
 use App\Http\Requests\ProductUpdateRequest;
+use App\Imports\ProductImport;
+use Illuminate\Support\Facades\Auth;
 use Maatwebsite\Excel\Facades\Excel;
 
 class ProductController extends Controller
@@ -109,8 +111,21 @@ class ProductController extends Controller
         }
     }
 
-    public function downloadFormat() 
+    public function downloadFormat()
     {
         return Excel::download(new ProductExport, 'Product.xlsx');
-    }    
+    }
+
+    public function import(Request $request)
+    {
+        $request->validate([
+            'file' => 'required|mimes:xlsx,xls,csv',
+        ]);
+
+        $userId = Auth::id(); // Get the currently authenticated user ID
+
+        Excel::import(new ProductImport($userId), $request->file('file'));
+
+        return redirect()->back()->with('success', 'Data produk berhasil diimport');
+    }
 }

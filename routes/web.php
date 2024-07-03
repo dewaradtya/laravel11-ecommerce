@@ -53,4 +53,5 @@ Route::controller(ProductController::class)->group(function () {
     Route::put('products/{product}', 'update')->name('products.update');
     Route::delete('products/{product}', 'destroy')->name('products.destroy');
     Route::get('products/download-format', 'downloadFormat')->name('products.download-format');
+    Route::post('products/import', 'import')->name('products.import');
 });

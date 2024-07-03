@@ -6,16 +6,20 @@ import Table from '../../Components/Table';
 import Pagination from '../../Components/Pagination';
 import SplitButton from '../../Components/Button/SplitButton';
 import BadgeButton from '../../Components/Button/BadgeButton';
-import { FaPlus } from 'react-icons/fa';
+import { FaFile, FaPlus } from 'react-icons/fa';
 import { router } from '@inertiajs/react';
 import { rupiah } from '../../utils';
 import UpdateStock from './UpdateStock';
+import SplitButtonGroup from '../../Components/Button/SplitButtonGroup';
+import ImportExcel from './ImportExcel';
 
 const Index = ({ products, units }) => {
     const [showCreateModal, setShowCreateModal] = useState(false);
     const [showUpdateModal, setShowUpdateModal] = useState({ modal: false, product: null });
     const [showUpdateStockModal, setShowUpdateStockModal] = useState(false);
+    const [showImportProductModal, setShowImportProductModal] = useState(false);
     const [loadingButton, setLoadingButton] = useState(null);
+    const [dropdownOpen, setDropdownOpen] = useState(false);
 
     const handleEditButton = (product) => {
         setShowUpdateModal({ modal: true, product: product });
@@ -86,9 +90,25 @@ const Index = ({ products, units }) => {
             <div className="d-sm-flex align-items-center justify-content-between mb-4">
                 <h1 className="h3 mb-0 text-gray-800">Produk</h1>
 
-                <div className="d-flex gap-2">
+                <div className="d-flex column-gap-1 align-items-start flex-wrap">
                     <SplitButton color="primary" text="Tambah" icon={<FaPlus />} onClick={() => setShowCreateModal(true)} />
                     <SplitButton color="success" text="Stok" icon={<FaPlus />} onClick={() => setShowUpdateStockModal(true)} />
+                    <SplitButtonGroup
+                        color="info"
+                        text="Import Excel"
+                        icon={<FaFile />}
+                        dropdownOpen={dropdownOpen}
+                        setDropdownOpen={setDropdownOpen}
+                        onClick={() => setShowImportProductModal(true)}
+                    >
+                        <SplitButtonGroup.Link
+                            href="/products/download-format"
+                            dropdownOpen={dropdownOpen}
+                            setDropdownOpen={setDropdownOpen}
+                        >
+                            Download Format
+                        </SplitButtonGroup.Link>
+                    </SplitButtonGroup>
                 </div>
             </div>
 
@@ -106,6 +126,9 @@ const Index = ({ products, units }) => {
             )}
             {showUpdateStockModal && (
                 <UpdateStock showModal={showUpdateStockModal} setShowModal={setShowUpdateStockModal} products={products.data} />
+            )}
+            {showImportProductModal && (
+                <ImportExcel showModal={showImportProductModal} setShowModal={setShowImportProductModal} />
             )}
         </>
     );
